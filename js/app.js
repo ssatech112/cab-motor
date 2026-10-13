@@ -58,7 +58,8 @@ const ui = {
 
 function loadPrefs() {
   try {
-    const saved = JSON.parse(localStorage.getItem("teslasound-local") || "{}");
+    const raw = localStorage.getItem("cabmotor-local") || localStorage.getItem("teslasound-local") || "{}";
+    const saved = JSON.parse(raw);
     if (saved.carId && carById(saved.carId)) state.carId = saved.carId;
     if (Array.isArray(saved.pinned) && saved.pinned.length === 6) state.pinned = saved.pinned;
     if (saved.unit === "mph" || saved.unit === "kmh") state.unit = saved.unit;
@@ -72,7 +73,7 @@ function loadPrefs() {
 
 function savePrefs() {
   try {
-  localStorage.setItem("teslasound-local", JSON.stringify({
+  localStorage.setItem("cabmotor-local", JSON.stringify({
     carId: state.carId,
     pinned: state.pinned,
     unit: state.unit,
