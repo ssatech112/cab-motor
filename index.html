@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0b0d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>TeslaSound</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M5 22a11 11 0 1 1 22 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+        <path d="M16 22l6-8" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"></path>
+        <circle cx="16" cy="22" r="2.5" fill="var(--accent)"></circle>
+      </svg>
+      <h1 class="brand-name">TeslaSound</h1>
+    </div>
+    <div class="top-actions">
+      <div class="chips">
+        <span id="chipGps" class="chip" data-state="bad">GPS off</span>
+        <span id="chipEngine" class="chip" data-state="bad">Motor off</span>
+      </div>
+      <button id="fullBtn" class="icon-btn" type="button">Pantalla completa</button>
+    </div>
+  </header>
+
+  <main class="dash">
+    <section class="gauge-panel" aria-label="Cuadro de instrumentos">
+      <div class="gauge">
+        <svg id="tach" viewBox="-16 -20 432 390" role="img" aria-label="Velocidad, marcha y revoluciones">
+          <path id="tachTrack" class="tach-track" pathLength="100"></path>
+          <path id="tachRed" class="tach-red"></path>
+          <path id="tachValue" class="tach-value" pathLength="100" stroke-dasharray="0 100"></path>
+          <g id="tachTicks"></g>
+          <text id="speed" class="g-speed" x="200" y="226">0</text>
+          <text id="unit" class="g-unit" x="200" y="258">km/h</text>
+          <rect id="gearBox" class="g-gear-box" x="168" y="280" width="64" height="50" rx="12"></rect>
+          <text id="gear" class="g-gear" x="200" y="306">–</text>
+          <text class="g-rpm" x="200" y="360"><tspan id="rpm">0</tspan> rpm</text>
+        </svg>
+      </div>
+      <div class="bars">
+        <div class="bar">
+          <span class="bar-label">Acelerador</span>
+          <div class="bar-track"><div id="throttleFill" class="bar-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-label="Controles">
+      <button id="startBtn" class="start-btn" type="button">
+        <span class="start-ring" aria-hidden="true"></span>
+        <span id="startLabel">Arrancar motor</span>
+      </button>
+      <div class="free-line">
+        <span id="runNote">Tu versión · sin límite de tiempo</span>
+        <b id="driveState">Parado</b>
+      </div>
+      <div class="car-card">
+        <div id="carName" class="car-name">Shift Maniac</div>
+        <div id="carTag" class="car-tag"></div>
+      </div>
+      <div id="carPicker" class="car-picker" role="radiogroup" aria-label="Coches"></div>
+
+      <div class="segmented" role="radiogroup" aria-label="Modo">
+        <button id="modeGps" type="button" role="radio" aria-checked="true">Conducción GPS</button>
+        <button id="modeTest" type="button" role="radio" aria-checked="false">Prueba</button>
+      </div>
+
+      <div class="demo-only pedals">
+        <button id="brakePedal" class="pedal pedal-brake" type="button">
+          <span class="pedal-plate" style="--press:0"><i></i><i></i><i></i><i></i></span>
+          Freno
+        </button>
+        <button id="gasPedal" class="pedal pedal-gas" type="button">
+          <span class="pedal-plate" style="--press:0"><i></i><i></i><i></i></span>
+          Gas
+        </button>
+      </div>
+      <p class="demo-only pedal-note">Abajo del pedal acelera más. Arriba del gas mantiene la velocidad. También valen las flechas o W y S.</p>
+      <button id="demoBtn" class="ghost-btn demo-only" type="button">Recorrido demo</button>
+      <p id="status" class="status" role="status"></p>
+
+      <div class="settings">
+        <label class="slider"><span>Volumen <output id="volOut">100%</output></span>
+          <input id="vol" type="range" min="0" max="100" value="100">
+        </label>
+        <label class="slider"><span>Intensidad <output id="intOut">50%</output></span>
+          <input id="intensity" type="range" min="0" max="100" value="50">
+        </label>
+        <label class="slider"><span>Carácter <output id="charOut">75%</output></span>
+          <input id="character" type="range" min="0" max="100" value="75">
+        </label>
+        <label class="slider"><span>Petardeo <output id="crackOut">30%</output></span>
+          <input id="crackle" type="range" min="0" max="100" value="30">
+        </label>
+        <div class="units">
+          <span>Unidades</span>
+          <div class="segmented small" role="radiogroup" aria-label="Unidades">
+            <button id="unitKmh" type="button" role="radio" aria-checked="true">km/h</button>
+            <button id="unitMph" type="button" role="radio" aria-checked="false">mph</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="info">
+    <div>
+      <h2>Úsalo en tu Tesla</h2>
+      <ol>
+        <li>Abre esta página en el navegador del Tesla, con el coche parado.</li>
+        <li>Pulsa <b>Arrancar motor</b> y acepta la ubicación. Sin GPS el motor no sube de vueltas: el sonido sigue tu velocidad.</li>
+        <li>Sube el volumen del equipo. Acelera y el motor estira marchas; al soltar, petardea si el petardeo está alto.</li>
+        <li>Parado en un semáforo, mantén <b>REV</b> para un golpe de gas.</li>
+      </ol>
+      <p class="hint">La intensidad decide lo pronto que el acelerón se convierte en gas y lo tarde que cambia de marcha. El carácter pasa de un motor tapado a escapes abiertos. El petardeo marca los pops al levantar el pie. En la prueba puedes oírlo sin moverte, con los pedales o el recorrido demo.</p>
+    </div>
+    <div>
+      <h2>Compatibilidad</h2>
+      <ul id="diag" class="diag"></ul>
+      <p class="hint">La ubicación se queda en este navegador. Solo mide la velocidad y no se envía a ningún sitio.</p>
+    </div>
+    <div class="about">
+        <h2>Motor sintetizado en el navegador</h2>
+        <p>Mismo tipo de sintetizador que TeslaSound: fase de cigüeñal, bancos de escape, petardeos y (en el Hellcat) el silbido del compresor. Sigue las revoluciones del GPS o de la prueba. Funciona en el navegador del Tesla y en el móvil por Bluetooth.</p>
+        <ul class="about-cars">
+          <li><b>Shift Maniac:</b> bóxer inventado que grita hasta 9.000 rpm en diez marchas cortas.</li>
+          <li><b>Porsche 911 GT3:</b> bóxer 4.0, 9.000 rpm, siete marchas.</li>
+          <li><b>V8 Muscle:</b> ralentí irregular de un V8 crossplane.</li>
+          <li><b>Ferrari V12:</b> aullido fino hasta 8.900 rpm.</li>
+          <li><b>Dodge Hellcat:</b> V8 sobrealimentado con cambios más secos.</li>
+          <li><b>Haunted Hearse:</b> latido, viento y un grito si revolucionas parado.</li>
+          <li><b>Electric Zen:</b> zumbido que se aclara con la velocidad.</li>
+          <li><b>Rally Cinco:</b> cinco cilindros con el warble de un rally.</li>
+        </ul>
+        <h2>Preguntas</h2>
+        <details class="faq">
+          <summary>¿Suena fuera del coche, como el Boombox?</summary>
+          <p>No. Suena por los altavoces de dentro, igual que la música. Una página web no puede usar el altavoz exterior.</p>
+        </details>
+        <details class="faq">
+          <summary>¿Por qué pide la ubicación?</summary>
+          <p>El navegador saca la velocidad del GPS. Las coordenadas no salen del coche.</p>
+        </details>
+        <details class="faq">
+          <summary>¿Hay retraso?</summary>
+          <p>Un poco. El GPS va unas décimas por detrás de la aguja real del coche, y el motor suaviza las vueltas para no sonar a saltos.</p>
+        </details>
+        <details class="faq">
+          <summary>¿Es una grabación?</summary>
+          <p>No es un MP3 en bucle. Es un sintetizador que imita el escape y acelera con las vueltas. Al mantener REV oíes un acelerón extra.</p>
+        </details>
+    </div>
+  </section>
+
+  <footer class="foot">
+    Motor generado en el navegador. Sigue tu velocidad. Mira la carretera.
+  </footer>
+
+  <button id="revPad" class="pad pad-rev" type="button">REV<small>mantén pulsado</small></button>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button id="modalClose" class="modal-close" type="button" aria-label="Cerrar">×</button>
+      <h2 id="modalTitle">Todos los coches</h2>
+      <div id="allCars" class="cars-grid"></div>
+    </div>
+  </div>
+
+  <script src="js/engine-dsp.js"></script>
+  <script src="js/cars.js"></script>
+  <script src="js/engine-configs.js"></script>
+  <script src="js/synth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
